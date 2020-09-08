@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="cl.arcos.ofertas_arcos" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+
+    <name>Ofertas Arcos</name>
+    <description>
+        Publica tus anuncios de empleo/prácitca para estudiantes del Instituto Profesional Arcos.
+    </description>
+    <author email="jorgedelcampo@arcos.cl" href="https://www.arcos.cl">
+        Jorge del Campo Andrade
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+	<icon src="icon.png" />
+	
+	<gap:plugin name="cordova-plugin-inappbrowser" source="npm" version="1.0.1" />
+	<plugin name="cordova-plugin-whitelist" spec="~1.3.4" />
+	<plugin name="cordova-plugin-network-information" spec="~2.0.2" />
+	<plugin name="cordova-plugin-firebase" spec="^2.0.0" />
+		
+    <resource-file src="google-services.json" target="app/google-services.json" />
+	
+</widget>
