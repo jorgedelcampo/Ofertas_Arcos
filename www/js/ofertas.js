@@ -2,6 +2,55 @@
 
 var app = {
 	
+	setupPush: function() {
+        console.log('calling push init');
+        var push = PushNotification.init({
+            "android": {
+                "senderID": "681783871189"
+            },
+            "browser": {},
+            "ios": {
+                "sound": true,
+                "vibration": true,
+                "badge": true
+            },
+            "windows": {}
+        });
+        console.log('after init');
+
+        push.on('registration', function(data) {
+            console.log('registration event: ' + data.registrationId);
+
+            var oldRegId = localStorage.getItem('registrationId');
+            if (oldRegId !== data.registrationId) {
+                // Save new registration ID
+                localStorage.setItem('registrationId', data.registrationId);
+                // Post registrationId to your app server as the value has changed
+            }
+
+            var parentElement = document.getElementById('registration');
+            var listeningElement = parentElement.querySelector('.waiting');
+            var receivedElement = parentElement.querySelector('.received');
+
+            listeningElement.setAttribute('style', 'display:none;');
+            receivedElement.setAttribute('style', 'display:block;');
+        });
+
+        push.on('error', function(e) {
+            console.log("push error = " + e.message);
+        });
+
+        push.on('notification', function(data) {
+            console.log('notification event');
+            navigator.notification.alert(
+                data.message,         // message
+                null,                 // callback
+                data.title,           // title
+                'Ok'                  // buttonName
+            );
+       });
+    },
+	
 	checkUser: function(){
 				
 		var usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -634,8 +683,6 @@ var app = {
 		
 	verOferta: function(index, place) {
 		
-		firebase.analytics().logEvent('verOferta');
-		
 		var floatDialog = document.getElementById('float_dialog');
 		app.offDialog();
 								
@@ -762,7 +809,6 @@ var app = {
 	verPostulaciones: function(index){
 		
 		var index = index;
-		firebase.analytics().logEvent('verPostulaciones');
 		
 		var floatDialog = document.getElementById('float_dialog');
 		app.offDialog();
@@ -794,8 +840,6 @@ var app = {
 
 
 	verPostulante: function(id_postulacion){
-		
-		firebase.analytics().logEvent('verPostulante');
 
 		var chat = document.getElementById('chat');
 		var postulante = JSON.parse(localStorage.getItem('postulaciones'));
@@ -1247,7 +1291,6 @@ var app = {
 			document.getElementById('loading').classList.remove('loading_active');
 			if(res.status == 1){
 				var classMsg = 'success';
-				firebase.analytics().logEvent('anadirOferta');
 				} // end if res.status == 1
 			else{
 				var classMsg = 'error';
@@ -1284,7 +1327,6 @@ var app = {
 			document.getElementById('loading').classList.remove('loading_active');
 			if(res.status == 1){
 				var classMsg = 'success';
-				firebase.analytics().logEvent('editarOferta');
 				} // end if res.status == 1
 			else{
 				var classMsg = 'error';
@@ -1610,5 +1652,7 @@ var app = {
 if ('addEventListener' in document) {
 	document.addEventListener('deviceready',function() {
 		app.checkUser();
+		console.log('calling setup push');
+        app.setupPush();
 		}, false);
 	}
